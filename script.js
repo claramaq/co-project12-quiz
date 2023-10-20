@@ -61,7 +61,10 @@
     const quiz = $('.quiz')
     const startBtn = $('.start')
     const startDiv = $('#start')
-
+    const questionDiv = $('.question')
+    const answerDiv = $('.answers')
+    const resultDiv = $('#result')
+    
 //Code to Deploy
     //Hide quiz at the beginning
         quiz.hide();
@@ -82,31 +85,47 @@
 
     function setNewQuestion() {
         //Create random number from available question index
-            const randomNum = Math.floor(Math.random() * questionsArray.length)
+            const randomQuestion = Math.floor(Math.random() * questionsArray.length)
         //Select random question from index and hold in new splice
-        //Splice removes question from question index for no repeats
-            const newSplicedArray = questionsArray.splice(randomNum, 1)
+        //(splice removes question from question index for no repeats)
+            const newSplicedArray = questionsArray.splice(randomQuestion, 1)
         
         //Define new terms to hold content from new splice
             //Question
                 const newQuestion = newSplicedArray[0].question
             //Answers
-                const newAnswers = newSplicedArray[0].answers
+                const answers = newSplicedArray[0].answers
             //Correct Answer
                 const correctNewAnswer = newSplicedArray[0].correctAnswer
         
-        //Console log for testing before each use to ensure works 
-        //[will remove before final submission]
-            //New question put in HTML question section
-                console.log(newQuestion)
-                $('.question').text(newQuestion)
-            //New Answers put in HTML buttons section
-            //Need to parse each answer to own button
-                console.log(newAnswers)
-                // $('button').text(newAnswers)
+        //Add Question information to HTML
+            //Put question into question p
+                questionDiv.text(newQuestion)
+            //Empty answerDiv in prep for new answers
+                answerDiv.empty()
+            //Call createButton function
+                createButton()
+            
+            //FUNCTIONS
+            //Create Button function
+            function createButton() {
+                //Loop for all answers in array; add 2 to answer length to account for splicing
+                for (let i = 0; i <= answers.length + 2; i++) {
+                    //Create random number for answer index to randomize answers
+                    const randomAnswer = Math.floor(Math.random() * answers.length)
+                    //Splice random answer from answers list
+                    let newRandomAnswer = answers.splice(randomAnswer, 1)
+                    //Display answer in button
+                    answerDiv.append(`<button>${newRandomAnswer}</button>`)
+                }
+            }
+
+            
             //Correct Answer will be hidden until answer submitted and the 
             //div will change colors based on whether the selected answer 
             //was correct or not
-                console.log(correctNewAnswer)
-                $('#result').text("Correct Answer: " + correctNewAnswer)
+                // console.log(correctNewAnswer)
+                resultDiv.text("Correct Answer: " + correctNewAnswer)
     }
+
+    

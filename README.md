@@ -8,9 +8,9 @@ I tried to make this as miniscule to the project requirements as possible due to
 - Random question is generated
 - Question populates where it's supposed to
 - Correct Answer populates where it's supposed to
+- Fix buttons to only display one item from array of answers
 
 ## WIP
-- Fix buttons to only display one item from array of answers
 - Add listener on button clicks
 - Add logic to button clicks to style and display correct Answer
 - Add next button after answered
