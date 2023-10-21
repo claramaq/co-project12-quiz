@@ -41,7 +41,7 @@
             answers: ["Luffy", "Sanji", "Ussop", "Zoro"]
         },
         {
-            question:"In The Adventure Zone podcast by the McElroy brothers, what's arc is played with the Monster of the Week rule set?",
+            question:"In The Adventure Zone podcast by the McElroy family, which arc uses the Monster of the Week rule set?",
             correctAnswer: "Amnesty",
             answers: ["Balance", "Graduation", "Ethersea", "Amnesty"]
         },
@@ -60,53 +60,97 @@
 //Define some HTML element variables
     const quiz = $('.quiz')
     const startBtn = $('.start')
-    const startDiv = $('#start')
+    const resetBtn = $('.reset')
+    const nextBtn = $('.next')
     const questionDiv = $('.question')
     const answerDiv = $('.answers')
-    const resultDiv = $('#result')
+    const resultDiv = $('.result')
+    let n = 0
     
 //Code to Deploy
-    //Hide quiz at the beginning
+    //Hide quiz at the beginning && Hit start to deploy function startQuiz
+        resetBtn.hide();
+        nextBtn.hide();
         quiz.hide();
-    //Hit start to deploy function startQuiz
+        resetBtn.on('click', resetQuiz)
+        nextBtn.on('click', nextQuestion)
         startBtn.on('click', startQuiz)
+       
+//FUNCTIONS
 
-//Functions for code Reference
+    //Reloads the Quiz
+        function resetQuiz () {
+            location.reload();
+        }
+    //Loads next Question
+        function nextQuestion() {
+            nextBtn.hide();
+            resultClear();
+            setNewQuestion();
+        }
+    //Clears the result div
+        function resultClear() {
+            resultDiv.empty();
+            resultDiv.css("background-color", "transparent")
+        }
     //Start the quiz: hide the start button and show the hidden questions
         function startQuiz() {
-            //Hide start Div
-            startDiv.hide();
-            //Select new question
+            startBtn.hide();
             setNewQuestion();
-            //Show quiz
             quiz.show();
         }
 
-
-    function setNewQuestion() {
-        //Create random number from available question index
-            const randomQuestion = Math.floor(Math.random() * questionsArray.length)
-        //Select random question from index and hold in new splice
-        //(splice removes question from question index for no repeats)
-            const newSplicedArray = questionsArray.splice(randomQuestion, 1)
-        
-        //Define new terms to hold content from new splice
-            //Question
-                const newQuestion = newSplicedArray[0].question
-            //Answers
-                const answers = newSplicedArray[0].answers
-            //Correct Answer
-                const correctNewAnswer = newSplicedArray[0].correctAnswer
-        
-        //Add Question information to HTML
-            //Put question into question p
-                questionDiv.text(newQuestion)
-            //Empty answerDiv in prep for new answers
-                answerDiv.empty()
-            //Call createButton function
-                createButton()
+    //Select next random question from array and remove to new array using splice
+        function setNewQuestion() {
             
-            //FUNCTIONS
+            //Create random number from available question index && Select random question from index and hold in new splice
+                const randomQuestion = Math.floor(Math.random() * questionsArray.length)
+                const newSplicedArray = questionsArray.splice(randomQuestion, 1)
+            
+            //Define new terms to hold content from new splice
+                //Question && Answers && Correct Answer
+                const newQuestion = newSplicedArray[0].question
+                const answers = newSplicedArray[0].answers
+                const correctNewAnswer = newSplicedArray[0].correctAnswer
+            //If random number is null or qu randomQuestion === null || randomQuestion === 0
+                if (n >= 10) {
+                    finished();
+                }
+            //Add Question information to HTML
+                //Put question into question p && Empty answerDiv in prep for new answers && Call createButton function
+                questionDiv.text(newQuestion)
+                answerDiv.empty()
+                createButton()
+
+                let answered = false
+                $("button").on("click", function() {
+                    if (answered === false) {
+                        $(this).addClass("selected");
+                        $('button').prop("disabled", true)
+                        $('#reset').show();
+                        $('#next').show();
+
+                        if ($(this).text() === correctNewAnswer) {
+                            resultDiv.text("Correct!! The answer is " + correctNewAnswer)
+                            resultDiv.css({
+                                "background-color": "hsl(130, 60%, 70%)",
+                                "color": "hsl(130, 80%, 10%)"
+                                })
+
+                        } else {
+                            resultDiv.text("Incorrect! The correct Answer is " + correctNewAnswer)
+                            resultDiv.css({
+                                "background-color": "hsl(0, 60%, 70%)",
+                                "color": "hsl(130, 80%, 10%)"})
+                    }
+                }
+                answered = true;
+                resetBtn.show();
+                nextBtn.show();
+                n++
+                })
+
+        //FUNCTIONS
             //Create Button function
             function createButton() {
                 //Loop for all answers in array; add 2 to answer length to account for splicing
@@ -118,14 +162,11 @@
                     //Display answer in button
                     answerDiv.append(`<button>${newRandomAnswer}</button>`)
                 }
-            }
-
             
-            //Correct Answer will be hidden until answer submitted and the 
-            //div will change colors based on whether the selected answer 
-            //was correct or not
-                // console.log(correctNewAnswer)
-                resultDiv.text("Correct Answer: " + correctNewAnswer)
-    }
-
-    
+            }
+        }
+        
+            function finished() {
+                quiz.hide();
+                $('h1').append('h2').text('Thank you for playing!');
+            }
