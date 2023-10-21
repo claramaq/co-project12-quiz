@@ -87,3 +87,16 @@ button:hover,
     margin: 10px 20px;
     width: 640px;
 }
+
+@media (max-width: 700px) {
+    
+    .wrapper {
+        width: 300px;
+    }
+    .navigate {
+        flex-direction: column;
+    }
+    .result {
+        width: 290px;
+    }
+}
